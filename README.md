@@ -1,1 +1,1 @@
-# Stori Lambda function
+# Stori Lambda

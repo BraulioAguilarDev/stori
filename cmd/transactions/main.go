@@ -5,14 +5,14 @@ import (
 	"stori/api"
 )
 
-func config() (*api.APIStori, error) {
+func config() (*api.Stori, error) {
 	// db, err := postgres.ConnectInit("postgres://localhost:5432/sf_adtech_apptracking?sslmode=disable", "postgres", "root", 3)
 	// if err != nil {
 	// 	panic(err)
 	// }
 
 	// txns := transactionhdl.ProvideTransactionHandler()
-	return &api.APIStori{
+	return &api.Stori{
 		// TxnsHandler: txns,
 	}, nil
 }

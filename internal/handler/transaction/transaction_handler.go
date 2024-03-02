@@ -7,7 +7,6 @@ import (
 )
 
 type TransactionHandler struct {
-	// transactionService
 	txnsService ports.TransactionServicePort
 }
 
@@ -19,5 +18,5 @@ func ProvideTransactionHandler(txnsSrv ports.TransactionServicePort) *Transactio
 }
 
 func (hdl *TransactionHandler) ReceiveFileToProcessHandler(ctx *gin.Context) {
-
+	ctx.JSON(200, "ok")
 }

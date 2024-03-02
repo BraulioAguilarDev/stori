@@ -3,19 +3,20 @@ package api
 import (
 	"context"
 	"net/http"
-	transactionhdl "stori/internal/handler/transactions"
+	transactionhdl "stori/internal/handler/transaction"
 
 	"github.com/aws/aws-lambda-go/events"
 	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
 	"github.com/gin-gonic/gin"
 )
 
-type APIStori struct {
-	TxnsHandler *transactionhdl.TransactionHandler
-	Router      *gin.Engine
-	ginLambda   *ginadapter.GinLambda
+type Stori struct {
+	TransactionHandler *transactionhdl.TransactionHandler
+	Router             *gin.Engine
+	ginLambda          *ginadapter.GinLambda
 }
 
+// Custom CORS
 func cors() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
@@ -33,7 +34,7 @@ func cors() gin.HandlerFunc {
 	}
 }
 
-func (api *APIStori) SetupRouter() {
+func (api *Stori) SetupRouter() {
 	router := gin.Default()
 	router.Use(
 		gin.Recovery(),
@@ -42,11 +43,10 @@ func (api *APIStori) SetupRouter() {
 	)
 
 	api.Router = router
-
-	api.Router.POST("/transactions-by-account", api.TxnsHandler.ReceiveFileToProcessHandler)
+	api.Router.POST("/transactions-by-account", api.TransactionHandler.ReceiveFileToProcessHandler)
 }
 
-func (api *APIStori) Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func (api *Stori) Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	api.ginLambda = ginadapter.New(api.Router)
 	return api.ginLambda.ProxyWithContext(ctx, req)
 }
