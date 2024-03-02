@@ -6,7 +6,7 @@ type transactionRepository struct {
 	db *gorm.DB
 }
 
-func NewEventsToSentRepository(db *gorm.DB) *transactionRepository {
+func NewTransactionRepository(db *gorm.DB) *transactionRepository {
 	return &transactionRepository{
 		db: db,
 	}

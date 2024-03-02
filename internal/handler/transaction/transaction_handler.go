@@ -1,4 +1,4 @@
-package transactionhdl
+package transactionhdlr
 
 import (
 	"stori/internal/ports"
@@ -6,17 +6,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type TransactionHandler struct {
-	txnsService ports.TransactionServicePort
+type TransactionHdlr struct {
+	service ports.TransactionServicePort
 }
 
-func ProvideTransactionHandler(txnsSrv ports.TransactionServicePort) *TransactionHandler {
-
-	return &TransactionHandler{
-		txnsService: txnsSrv,
+func ProvideTransactionHandler(srv ports.TransactionServicePort) *TransactionHdlr {
+	return &TransactionHdlr{
+		service: srv,
 	}
 }
 
-func (hdl *TransactionHandler) ReceiveFileToProcessHandler(ctx *gin.Context) {
+func (hdl *TransactionHdlr) ReceiveFileToProcessHdlr(ctx *gin.Context) {
 	ctx.JSON(200, "ok")
 }

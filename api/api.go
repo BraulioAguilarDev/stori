@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"net/http"
+	profilehdlr "stori/internal/handler/profile"
 	transactionhdl "stori/internal/handler/transaction"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -11,7 +12,8 @@ import (
 )
 
 type Stori struct {
-	TransactionHandler *transactionhdl.TransactionHandler
+	TransactionHandler *transactionhdl.TransactionHdlr
+	ProfileHandler     *profilehdlr.ProfileHdlr
 	Router             *gin.Engine
 	ginLambda          *ginadapter.GinLambda
 }
@@ -43,7 +45,7 @@ func (api *Stori) SetupRouter() {
 	)
 
 	api.Router = router
-	api.Router.POST("/transactions-by-account", api.TransactionHandler.ReceiveFileToProcessHandler)
+	api.Router.POST("/signup", api.ProfileHandler.SignUpHandler)
 }
 
 func (api *Stori) Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {

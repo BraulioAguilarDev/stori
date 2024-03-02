@@ -12,6 +12,6 @@ func ProvideTransactionService(repo ports.TransactionRepositoryPort) *transactio
 	}
 }
 
-func (srv *transactionService) Create() error {
-	return srv.repo.Create()
-}
+// func (srv *transactionService) Create() error {
+// 	return srv.repo.Create()
+// }

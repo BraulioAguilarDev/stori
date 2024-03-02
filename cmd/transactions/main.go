@@ -3,17 +3,24 @@ package main
 import (
 	"fmt"
 	"stori/api"
+	"stori/internal/core/service"
+	profilehdlr "stori/internal/handler/profile"
+	registerRepository "stori/internal/storage"
+	"stori/pkg/database"
 )
 
 func config() (*api.Stori, error) {
-	// db, err := postgres.ConnectInit("postgres://localhost:5432/sf_adtech_apptracking?sslmode=disable", "postgres", "root", 3)
-	// if err != nil {
-	// 	panic(err)
-	// }
+	db, err := database.ConnectInit("postgres://localhost:5432/stori?sslmode=disable", "postgres", "postgres", 3)
+	if err != nil {
+		panic(err)
+	}
 
-	// txns := transactionhdl.ProvideTransactionHandler()
+	profileRepo := registerRepository.NewProfileRepository(db)
+	profileService := service.ProvideProfileService(profileRepo)
+	profileHdlr := profilehdlr.ProvideProfileHandler(profileService)
+
 	return &api.Stori{
-		// TxnsHandler: txns,
+		ProfileHandler: profileHdlr,
 	}, nil
 }
 
