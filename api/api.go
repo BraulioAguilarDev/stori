@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"net/http"
+	accounthdlr "stori/internal/handler/account"
 	profilehdlr "stori/internal/handler/profile"
 	transactionhdl "stori/internal/handler/transaction"
 
@@ -14,6 +15,7 @@ import (
 type Stori struct {
 	TransactionHandler *transactionhdl.TransactionHdlr
 	ProfileHandler     *profilehdlr.ProfileHdlr
+	AccountHandler     *accounthdlr.AccountHdlr
 	Router             *gin.Engine
 	ginLambda          *ginadapter.GinLambda
 }
@@ -46,6 +48,7 @@ func (api *Stori) SetupRouter() {
 
 	api.Router = router
 	api.Router.POST("/signup", api.ProfileHandler.SignUpHandler)
+	api.Router.POST("/accounts", api.AccountHandler.CreateHandler)
 }
 
 func (api *Stori) Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {

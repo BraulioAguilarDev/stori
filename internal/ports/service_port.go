@@ -8,4 +8,9 @@ type TransactionServicePort interface {
 
 type ProfileServicePort interface {
 	Create(dto *domain.ProfileDTO) (*domain.ProfileDTO, error)
+	GetByID(uuid string) (*domain.ProfileDTO, error)
+}
+
+type AccountServicePort interface {
+	Create(dto *domain.AccountDTO) (*domain.AccountDTO, error)
 }

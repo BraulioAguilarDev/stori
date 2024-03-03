@@ -4,11 +4,12 @@ import "time"
 
 type Account struct {
 	ID        string    `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
-	Name      string    `gorm:"not null"`
+	Owner     string    `gorm:"not null"`
+	Bank      string    `gorm:"not null"`
 	Type      string    `gorm:"not null"`
 	Number    int       `gorm:"not null"`
-	UserID    string    `gorm:"not null"`
-	CreatedAt time.Time `gorm:"autoCreateTime:milli"`
+	ProfileID string    `gorm:"not null"`
+	CreatedAt time.Time `gorm:"autoCreateTime"`
 }
 
 func (a *Account) TableName() string {
@@ -17,9 +18,10 @@ func (a *Account) TableName() string {
 
 type AccountDTO struct {
 	ID        string    `json:"account_id"`
-	Name      string    `json:"name"`
+	Owner     string    `json:"owner"`
+	Bank      string    `json:"bank"`
 	Type      string    `json:"type"`
 	Number    int       `json:"number"`
-	UserID    string    `json:"user_id"`
+	ProfileID string    `json:"profile_id"`
 	CreatedAt time.Time `json:"created_at"`
 }

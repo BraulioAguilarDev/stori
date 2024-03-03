@@ -10,7 +10,7 @@ type Transaction struct {
 	DebitAmount   float64
 	CreditAmount  float64
 	BankAccountID string       `gorm:"not null"`
-	CreatedAt     sqltime.Time `gorm:"autoCreateTime:milli"`
+	CreatedAt     sqltime.Time `gorm:"autoCreateTime"`
 }
 
 func (t *Transaction) TableName() string {

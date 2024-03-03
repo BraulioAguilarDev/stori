@@ -9,7 +9,7 @@ type Profile struct {
 	Name      string       `gorm:"not null"`
 	Email     string       `gorm:"not null"`
 	Firebase  string       `gorm:"not null"`
-	CreatedAt sqltime.Time `gorm:"autoCreateTime:milli"`
+	CreatedAt sqltime.Time `gorm:"autoCreateTime"`
 }
 
 func (u *Profile) TableName() string {

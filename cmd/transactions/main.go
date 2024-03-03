@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"stori/api"
 	"stori/internal/core/service"
+	accounthdlr "stori/internal/handler/account"
 	profilehdlr "stori/internal/handler/profile"
-	registerRepository "stori/internal/storage"
+	repository "stori/internal/storage"
 	"stori/pkg/database"
 )
 
@@ -15,12 +16,17 @@ func config() (*api.Stori, error) {
 		panic(err)
 	}
 
-	profileRepo := registerRepository.NewProfileRepository(db)
+	profileRepo := repository.NewProfileRepository(db)
 	profileService := service.ProvideProfileService(profileRepo)
 	profileHdlr := profilehdlr.ProvideProfileHandler(profileService)
 
+	accountRepo := repository.NewAccountRepository(db)
+	accountService := service.ProvideAccountService(accountRepo)
+	accountHdlr := accounthdlr.ProvideAccountHandler(accountService, profileService)
+
 	return &api.Stori{
 		ProfileHandler: profileHdlr,
+		AccountHandler: accountHdlr,
 	}, nil
 }
 

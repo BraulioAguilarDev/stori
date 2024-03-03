@@ -30,6 +30,15 @@ func (repo *profileRepository) Create(dto *domain.ProfileDTO) (*domain.ProfileDT
 	return repo.fromEntity(*data), nil
 }
 
+func (repo *profileRepository) GetByID(uuid string) (*domain.ProfileDTO, error) {
+	var profile = domain.Profile{ID: uuid}
+	if err := repo.db.First(&profile).Error; err != nil {
+		return nil, err
+	}
+
+	return repo.fromEntity(profile), nil
+}
+
 // Mapping domain struct to DTO
 func (repo *profileRepository) fromEntity(profile domain.Profile) *domain.ProfileDTO {
 	return &domain.ProfileDTO{

@@ -18,3 +18,7 @@ func ProvideProfileService(repo ports.ProfileServicePort) *profileService {
 func (srv *profileService) Create(dto *domain.ProfileDTO) (*domain.ProfileDTO, error) {
 	return srv.repo.Create(dto)
 }
+
+func (srv *profileService) GetByID(uuid string) (*domain.ProfileDTO, error) {
+	return srv.repo.GetByID(uuid)
+}
