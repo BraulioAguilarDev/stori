@@ -1,4 +1,4 @@
-package profilehdlr
+package validator
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 
 var validate *validator.Validate
 
-func ValidateStructure(params Parameters) map[string]string {
+func ValidateStructure(params any) map[string]string {
 	validate = validator.New(validator.WithRequiredStructEnabled())
 	var errors = make(map[string]string, 0)
 
