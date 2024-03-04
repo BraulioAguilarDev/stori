@@ -6,10 +6,10 @@ import (
 )
 
 type accountService struct {
-	repo ports.AccountServicePort
+	repo ports.AccountRepositoryPort
 }
 
-func ProvideAccountService(repo ports.AccountServicePort) *accountService {
+func ProvideAccountService(repo ports.AccountRepositoryPort) *accountService {
 	return &accountService{
 		repo: repo,
 	}
@@ -17,4 +17,8 @@ func ProvideAccountService(repo ports.AccountServicePort) *accountService {
 
 func (srv *accountService) Create(dto *domain.AccountDTO) (*domain.AccountDTO, error) {
 	return srv.repo.Create(dto)
+}
+
+func (srv *accountService) GetByID(uuid string) (*domain.AccountDTO, error) {
+	return srv.repo.GetByID(uuid)
 }

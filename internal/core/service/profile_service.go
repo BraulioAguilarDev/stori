@@ -6,10 +6,10 @@ import (
 )
 
 type profileService struct {
-	repo ports.ProfileServicePort
+	repo ports.ProfileRepositoryPort
 }
 
-func ProvideProfileService(repo ports.ProfileServicePort) *profileService {
+func ProvideProfileService(repo ports.ProfileRepositoryPort) *profileService {
 	return &profileService{
 		repo: repo,
 	}

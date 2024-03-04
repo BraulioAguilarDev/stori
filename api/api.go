@@ -5,6 +5,7 @@ import (
 	"net/http"
 	accounthdlr "stori/internal/handler/account"
 	profilehdlr "stori/internal/handler/profile"
+	s3hdlr "stori/internal/handler/s3"
 	transactionhdl "stori/internal/handler/transaction"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -16,6 +17,7 @@ type Stori struct {
 	TransactionHandler *transactionhdl.TransactionHdlr
 	ProfileHandler     *profilehdlr.ProfileHdlr
 	AccountHandler     *accounthdlr.AccountHdlr
+	AccountS3Handler   *s3hdlr.S3Hdlr
 	Router             *gin.Engine
 	ginLambda          *ginadapter.GinLambda
 }
@@ -49,6 +51,7 @@ func (api *Stori) SetupRouter() {
 	api.Router = router
 	api.Router.POST("/signup", api.ProfileHandler.SignUpHandler)
 	api.Router.POST("/accounts", api.AccountHandler.CreateHandler)
+	api.Router.POST("/upload-to-s3", api.AccountS3Handler.UploadS3)
 }
 
 func (api *Stori) Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {

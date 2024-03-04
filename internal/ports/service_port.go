@@ -13,4 +13,9 @@ type ProfileServicePort interface {
 
 type AccountServicePort interface {
 	Create(dto *domain.AccountDTO) (*domain.AccountDTO, error)
+	GetByID(uuid string) (*domain.AccountDTO, error)
+}
+
+type AccountS3ServicePort interface {
+	Create(dto *domain.AccountS3DTO) (*domain.AccountS3DTO, error)
 }

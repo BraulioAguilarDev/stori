@@ -5,6 +5,7 @@ import (
 	"stori/internal/core/domain"
 	"stori/internal/ports"
 	"stori/pkg/response"
+	"stori/pkg/validator"
 
 	"github.com/gin-gonic/gin"
 )
@@ -38,9 +39,9 @@ func (hdl *ProfileHdlr) SignUpHandler(ctx *gin.Context) {
 		return
 	}
 
-	checkEventsErrs := ValidateStructure(input)
-	if len(checkEventsErrs) > 0 {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, response.FailureMappingErrors(checkEventsErrs))
+	errs := validator.ValidateStructure(input)
+	if len(errs) > 0 {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, response.FailureMappingErrors(errs))
 		return
 	}
 

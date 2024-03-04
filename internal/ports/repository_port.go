@@ -6,6 +6,16 @@ type TransactionRepositoryPort interface {
 	Create() error
 }
 
-type RegisterRepositoryPort interface {
+type ProfileRepositoryPort interface {
 	Create(dto *domain.ProfileDTO) (*domain.ProfileDTO, error)
+	GetByID(uuid string) (*domain.ProfileDTO, error)
+}
+
+type AccountRepositoryPort interface {
+	Create(dto *domain.AccountDTO) (*domain.AccountDTO, error)
+	GetByID(uuid string) (*domain.AccountDTO, error)
+}
+
+type AccountS3RepositoryPort interface {
+	Create(dto *domain.AccountS3DTO) (*domain.AccountS3DTO, error)
 }

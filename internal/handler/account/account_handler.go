@@ -6,17 +6,19 @@ import (
 	"stori/internal/core/domain"
 	"stori/internal/ports"
 	"stori/pkg/response"
+	"stori/pkg/validator"
 
 	"github.com/gin-gonic/gin"
 )
 
 type AccountHdlr struct {
-	AccountSrv ports.AccountServicePort
-	ProfileSrv ports.ProfileServicePort
+	AccountSrv   ports.AccountServicePort
+	ProfileSrv   ports.ProfileServicePort
+	AccountS3Srv ports.AccountS3ServicePort
 }
 
 // Account params
-type Parameters struct {
+type AccountParameters struct {
 	Owner  string `json:"owner" validate:"required"`
 	Bank   string `json:"bank" validate:"required"`
 	Type   string `json:"type" validate:"required"`
@@ -24,7 +26,11 @@ type Parameters struct {
 	User   string `json:"user_id" validate:"required"`
 }
 
-func ProvideAccountHandler(account ports.AccountServicePort, profile ports.ProfileServicePort) *AccountHdlr {
+func ProvideAccountHandler(
+	account ports.AccountServicePort,
+	profile ports.ProfileServicePort,
+	s3 ports.AccountS3ServicePort,
+) *AccountHdlr {
 	return &AccountHdlr{
 		AccountSrv: account,
 		ProfileSrv: profile,
@@ -32,13 +38,19 @@ func ProvideAccountHandler(account ports.AccountServicePort, profile ports.Profi
 }
 
 func (hdl *AccountHdlr) CreateHandler(ctx *gin.Context) {
-	var input Parameters
+	var input AccountParameters
 	if err := ctx.BindJSON(&input); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response.Failure(err.Error()))
 		return
 	}
 
-	// Getting user info
+	accErrors := validator.ValidateStructure(input)
+	if len(accErrors) > 0 {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, response.FailureMappingErrors(accErrors))
+		return
+	}
+
+	// Getting profile info
 	profile, err := hdl.ProfileSrv.GetByID(input.User)
 	if err != nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
@@ -60,7 +72,7 @@ func (hdl *AccountHdlr) CreateHandler(ctx *gin.Context) {
 
 	account, err := hdl.AccountSrv.Create(&request)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, response.Failure(err.Error()))
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response.Failure(err.Error()))
 		return
 	}
 

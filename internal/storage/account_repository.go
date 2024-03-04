@@ -32,6 +32,15 @@ func (repo *accountRepository) Create(dto *domain.AccountDTO) (*domain.AccountDT
 	return repo.fromEntity(*data), nil
 }
 
+func (repo *accountRepository) GetByID(uuid string) (*domain.AccountDTO, error) {
+	var account = domain.Account{ID: uuid}
+	if err := repo.db.First(&account).Error; err != nil {
+		return nil, err
+	}
+
+	return repo.fromEntity(account), nil
+}
+
 // Mapping domain struct to DTO
 func (repo *accountRepository) fromEntity(account domain.Account) *domain.AccountDTO {
 	return &domain.AccountDTO{
