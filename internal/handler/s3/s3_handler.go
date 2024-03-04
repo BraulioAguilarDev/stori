@@ -43,11 +43,9 @@ func (hdl *S3Hdlr) UploadS3(ctx *gin.Context) {
 		return
 	}
 
-	fmt.Println("paso", input.AccountID)
 	// Getting account info
 	account, err := hdl.AccountSrv.GetByID(input.AccountID)
 	if err != nil {
-		fmt.Println("GET Accounr ERROR:", err)
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -64,7 +62,6 @@ func (hdl *S3Hdlr) UploadS3(ctx *gin.Context) {
 
 	s3, err := hdl.AccountS3Srv.Create(&request)
 	if err != nil {
-		fmt.Println("ERROR:", err)
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response.Failure(err.Error()))
 		return
 	}
