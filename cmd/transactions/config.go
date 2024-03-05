@@ -7,14 +7,28 @@ import (
 	profilehdlr "stori/internal/handler/profile"
 	s3hdlr "stori/internal/handler/s3"
 	repository "stori/internal/storage"
+	"stori/pkg/cloud/aws"
 	"stori/pkg/database"
+	"time"
 )
 
 func config() (*api.Stori, error) {
 	db, err := database.ConnectInit("postgres://localhost:5432/stori?sslmode=disable", "postgres", "postgres", 3)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
+
+	// AWS settings
+	ses, err := aws.New(aws.Config{
+		Region: "us-west-2",
+		ID:     "AKIA3FLDYOQ4QT4SYBGS",
+		Secret: "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",
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	s3 := aws.NewS3(ses, time.Second*15)
 
 	// Profile setting
 	profileRepo := repository.NewProfileRepository(db)
@@ -30,7 +44,7 @@ func config() (*api.Stori, error) {
 	accountService := service.ProvideAccountService(accountRepo)
 
 	accountHdlr := accounthdlr.ProvideAccountHandler(accountService, profileService, s3Service)
-	s3Hdlr := s3hdlr.ProvideS3Handler(accountService, s3Service)
+	s3Hdlr := s3hdlr.ProvideS3Handler(accountService, s3Service, s3)
 
 	return &api.Stori{
 		ProfileHandler:   profileHdlr,

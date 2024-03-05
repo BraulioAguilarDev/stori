@@ -1,38 +1,46 @@
 package s3hdlr
 
 import (
+	"context"
 	"errors"
-	"fmt"
+	"mime/multipart"
 	"net/http"
 	"stori/internal/core/domain"
 	"stori/internal/ports"
+	"stori/pkg/cloud"
 	"stori/pkg/response"
 	"stori/pkg/validator"
 
 	"github.com/gin-gonic/gin"
 )
 
+const BucketName = "gopher-stori-files"
+
 type S3Hdlr struct {
 	AccountSrv   ports.AccountServicePort
 	AccountS3Srv ports.AccountS3ServicePort
+	S3           cloud.BucketClient
 }
 
-func ProvideS3Handler(account ports.AccountServicePort, s3 ports.AccountS3ServicePort) *S3Hdlr {
+func ProvideS3Handler(
+	account ports.AccountServicePort,
+	accountS3 ports.AccountS3ServicePort,
+	client cloud.BucketClient) *S3Hdlr {
 	return &S3Hdlr{
 		AccountSrv:   account,
-		AccountS3Srv: s3,
+		AccountS3Srv: accountS3,
+		S3:           client,
 	}
 }
 
-type S3Parameters struct {
-	AccountID string `json:"account_id" validate:"required"`
-	URL       string `json:"url" validate:"required"`
+type Parameters struct {
+	AccountID string                `form:"account_id" validate:"required"`
+	File      *multipart.FileHeader `form:"file"`
 }
 
-func (hdl *S3Hdlr) UploadS3(ctx *gin.Context) {
-	var input S3Parameters
-
-	if err := ctx.BindJSON(&input); err != nil {
+func (hdl *S3Hdlr) UploadToS3AndSaveHandler(ctx *gin.Context) {
+	var input Parameters
+	if err := ctx.Bind(&input); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response.Failure(err.Error()))
 		return
 	}
@@ -55,9 +63,16 @@ func (hdl *S3Hdlr) UploadS3(ctx *gin.Context) {
 		return
 	}
 
+	// First, we need to save in s3 bucket
+	url, err := hdl.uploadObject(ctx, input.File)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, errors.New("uploading file error"))
+		return
+	}
+
 	request := domain.AccountS3DTO{
 		AccountID: input.AccountID,
-		URL:       input.URL,
+		URL:       url,
 	}
 
 	s3, err := hdl.AccountS3Srv.Create(&request)
@@ -66,6 +81,20 @@ func (hdl *S3Hdlr) UploadS3(ctx *gin.Context) {
 		return
 	}
 
-	s3URL := fmt.Sprintf("%v", s3.URL)
-	ctx.JSON(http.StatusOK, response.Success(s3URL))
+	ctx.JSON(http.StatusOK, response.Success(s3.URL))
+}
+
+func (hdl *S3Hdlr) uploadObject(ctx context.Context, fh *multipart.FileHeader) (string, error) {
+	mpfile, err := fh.Open()
+	if err != nil {
+		return "", err
+	}
+	defer mpfile.Close()
+
+	url, err := hdl.S3.UploadObject(ctx, BucketName, fh.Filename, mpfile)
+	if err != nil {
+		return "", err
+	}
+
+	return url, nil
 }

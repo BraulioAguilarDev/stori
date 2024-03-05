@@ -12,7 +12,7 @@ type Profile struct {
 	CreatedAt sqltime.Time `gorm:"autoCreateTime"`
 }
 
-func (u *Profile) TableName() string {
+func (p *Profile) TableName() string {
 	return "profile"
 }
 

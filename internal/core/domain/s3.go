@@ -7,7 +7,7 @@ type AccountS3 struct {
 	URL string `gorm:"not null"`
 }
 
-func (a *AccountS3) TableName() string {
+func (s *AccountS3) TableName() string {
 	return "account_s3"
 }
 

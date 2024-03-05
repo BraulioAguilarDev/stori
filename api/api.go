@@ -48,10 +48,13 @@ func (api *Stori) SetupRouter() {
 		cors(),
 	)
 
+	// Set a lower memory limit for multipart forms (default is 32 MiB)
+	router.MaxMultipartMemory = 8 << 20
+
 	api.Router = router
 	api.Router.POST("/signup", api.ProfileHandler.SignUpHandler)
 	api.Router.POST("/accounts", api.AccountHandler.CreateHandler)
-	api.Router.POST("/upload-to-s3", api.AccountS3Handler.UploadS3)
+	api.Router.POST("/upload-to-s3", api.AccountS3Handler.UploadToS3AndSaveHandler)
 }
 
 func (api *Stori) Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
