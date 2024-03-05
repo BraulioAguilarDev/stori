@@ -18,3 +18,7 @@ func ProvideAccountS3Service(repo ports.AccountS3RepositoryPort) *accountS3Servi
 func (srv *accountS3Service) Create(dto *domain.AccountS3DTO) (*domain.AccountS3DTO, error) {
 	return srv.repo.Create(dto)
 }
+
+func (srv *accountS3Service) GetFileByAccountID(uuid string) (string, error) {
+	return srv.repo.GetFileByAccountID(uuid)
+}

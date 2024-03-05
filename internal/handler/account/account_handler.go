@@ -18,7 +18,7 @@ type AccountHdlr struct {
 }
 
 // Account params
-type AccountParameters struct {
+type Parameters struct {
 	Owner  string `json:"owner" validate:"required"`
 	Bank   string `json:"bank" validate:"required"`
 	Type   string `json:"type" validate:"required"`
@@ -38,7 +38,7 @@ func ProvideAccountHandler(
 }
 
 func (hdl *AccountHdlr) CreateHandler(ctx *gin.Context) {
-	var input AccountParameters
+	var input Parameters
 	if err := ctx.BindJSON(&input); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response.Failure(err.Error()))
 		return

@@ -3,7 +3,7 @@ package ports
 import "stori/internal/core/domain"
 
 type TransactionServicePort interface {
-	Create() error
+	Create(accountID string, rows [][]string) error
 }
 
 type ProfileServicePort interface {
@@ -18,4 +18,5 @@ type AccountServicePort interface {
 
 type AccountS3ServicePort interface {
 	Create(dto *domain.AccountS3DTO) (*domain.AccountS3DTO, error)
+	GetFileByAccountID(uuid string) (string, error)
 }

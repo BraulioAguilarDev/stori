@@ -2,9 +2,8 @@ package domain
 
 type AccountS3 struct {
 	AccountID string `gorm:"not null"`
-
-	// S3 url
-	URL string `gorm:"not null"`
+	URL       string `gorm:"not null"`
+	Filename  string
 }
 
 func (s *AccountS3) TableName() string {
@@ -14,4 +13,5 @@ func (s *AccountS3) TableName() string {
 type AccountS3DTO struct {
 	AccountID string `json:"account_id"`
 	URL       string `json:"url"`
+	Filename  string `json:"filename"`
 }

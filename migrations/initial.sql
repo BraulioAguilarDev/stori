@@ -41,6 +41,7 @@ ALTER TABLE account ADD CONSTRAINT constraint__bank__number UNIQUE (bank, number
 CREATE TABLE IF NOT EXISTS "account_s3" (
   "account_id" uuid NOT NULL,
   "url" VARCHAR NOT NULL,
+  "filename" VARCHAR,
   CONSTRAINT fk__account_s3__account_id__account__id
     FOREIGN KEY(account_id)
     REFERENCES account(id) ON DELETE CASCADE

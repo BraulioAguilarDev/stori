@@ -20,6 +20,7 @@ func (repo *accountS3Repository) Create(dto *domain.AccountS3DTO) (*domain.Accou
 	data := &domain.AccountS3{
 		AccountID: dto.AccountID,
 		URL:       dto.URL,
+		Filename:  dto.Filename,
 	}
 
 	if err := repo.db.Create(data).Error; err != nil {
@@ -29,5 +30,15 @@ func (repo *accountS3Repository) Create(dto *domain.AccountS3DTO) (*domain.Accou
 	return &domain.AccountS3DTO{
 		AccountID: data.AccountID,
 		URL:       data.URL,
+		Filename:  data.Filename,
 	}, nil
+}
+
+func (repo *accountS3Repository) GetFileByAccountID(uuid string) (string, error) {
+	var accountS3 = domain.AccountS3{AccountID: uuid}
+	if err := repo.db.First(&accountS3).Error; err != nil {
+		return "", err
+	}
+
+	return accountS3.Filename, nil
 }

@@ -3,7 +3,7 @@ package ports
 import "stori/internal/core/domain"
 
 type TransactionRepositoryPort interface {
-	Create() error
+	Create(dto []domain.TransactionDTO) error
 }
 
 type ProfileRepositoryPort interface {
@@ -18,4 +18,5 @@ type AccountRepositoryPort interface {
 
 type AccountS3RepositoryPort interface {
 	Create(dto *domain.AccountS3DTO) (*domain.AccountS3DTO, error)
+	GetFileByAccountID(uuid string) (string, error)
 }

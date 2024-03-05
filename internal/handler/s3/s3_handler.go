@@ -73,6 +73,7 @@ func (hdl *S3Hdlr) UploadToS3AndSaveHandler(ctx *gin.Context) {
 	request := domain.AccountS3DTO{
 		AccountID: input.AccountID,
 		URL:       url,
+		Filename:  input.File.Filename,
 	}
 
 	s3, err := hdl.AccountS3Srv.Create(&request)

@@ -6,6 +6,7 @@ import (
 	accounthdlr "stori/internal/handler/account"
 	profilehdlr "stori/internal/handler/profile"
 	s3hdlr "stori/internal/handler/s3"
+	transactionhdlr "stori/internal/handler/transaction"
 	repository "stori/internal/storage"
 	"stori/pkg/cloud/aws"
 	"stori/pkg/database"
@@ -43,12 +44,22 @@ func config() (*api.Stori, error) {
 	accountRepo := repository.NewAccountRepository(db)
 	accountService := service.ProvideAccountService(accountRepo)
 
+	// account s3
+	accountS3Repo := repository.NewAccountS3Repository(db)
+	accountS3Service := service.ProvideAccountS3Service(accountS3Repo)
+
 	accountHdlr := accounthdlr.ProvideAccountHandler(accountService, profileService, s3Service)
 	s3Hdlr := s3hdlr.ProvideS3Handler(accountService, s3Service, s3)
 
+	// Transaction settings
+	txnRepo := repository.NewTransactionRepository(db)
+	txnService := service.ProvideTransactionService(txnRepo)
+	txnsHdlr := transactionhdlr.ProvideTransactionHandler(txnService, accountService, accountS3Service, s3)
+
 	return &api.Stori{
-		ProfileHandler:   profileHdlr,
-		AccountHandler:   accountHdlr,
-		AccountS3Handler: s3Hdlr,
+		TransactionHandler: txnsHdlr,
+		ProfileHandler:     profileHdlr,
+		AccountHandler:     accountHdlr,
+		AccountS3Handler:   s3Hdlr,
 	}, nil
 }
