@@ -16,6 +16,6 @@ func ProvideTransactionHandler(srv ports.TransactionServicePort) *TransactionHdl
 	}
 }
 
-func (hdl *TransactionHdlr) ReceiveFileToProcessHdlr(ctx *gin.Context) {
+func (hdl *TransactionHdlr) ExecuteProcessHdlr(ctx *gin.Context) {
 	ctx.JSON(200, "ok")
 }
