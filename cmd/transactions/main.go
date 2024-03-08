@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func main() {
@@ -21,6 +23,5 @@ func main() {
 	}
 
 	api.SetupRouter()
-	api.Router.Run(":8080")
-	// lambda.Start(api.Handler)
+	lambda.Start(api.Handler)
 }
