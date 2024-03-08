@@ -1,9 +1,15 @@
 package service
 
 import (
+	"bytes"
+	"fmt"
+	"math"
+	"os"
 	"stori/internal/core/domain"
 	"stori/internal/ports"
+	"stori/pkg/mail"
 	"strconv"
+	"text/template"
 	"time"
 
 	"github.com/SamuelTissot/sqltime"
@@ -19,14 +25,24 @@ func ProvideTransactionService(repo ports.TransactionRepositoryPort) *transactio
 	}
 }
 
+type Tx struct {
+	Month string
+	Count int
+}
+type Summary struct {
+	Total                       float64
+	Txs                         []Tx
+	AverageDebit, AverageCredit float64
+}
+
 func (srv *transactionService) Create(accountID string, rows [][]string) error {
-	type Tx struct {
+	type Item struct {
 		Date   sqltime.Time
 		Debit  float64
 		Credit float64
 	}
 
-	var txns []Tx
+	var txns []Item
 	for _, item := range rows[1:] {
 		date, err := time.Parse("2006-01-02", item[1])
 		if err != nil {
@@ -41,7 +57,7 @@ func (srv *transactionService) Create(accountID string, rows [][]string) error {
 			credit, _ = strconv.ParseFloat(item[2][1:], 64)
 		}
 
-		txns = append(txns, Tx{
+		txns = append(txns, Item{
 			Date: sqltime.Time{
 				Time: date,
 			},
@@ -60,5 +76,54 @@ func (srv *transactionService) Create(accountID string, rows [][]string) error {
 		})
 	}
 
-	return srv.repo.Create(data)
+	if err := srv.repo.Create(data); err != nil {
+		return err
+	}
+
+	txnsMonth, err := srv.repo.TransactionsByMonth(accountID)
+	if err != nil {
+		panic(err)
+	}
+
+	var debitAmount, creditAmount float64
+	var debitCount, creditCount int
+
+	var txsmonth = make([]Tx, 0)
+	for _, month := range txnsMonth {
+		creditAmount += month.CreditAmount
+		debitAmount += month.DebitAmount
+		creditCount += month.CreditCount
+		debitCount += month.DebitCount
+
+		txsmonth = append(txsmonth, Tx{
+			Month: month.Month,
+			Count: month.CreditCount + month.DebitCount,
+		})
+	}
+
+	summary := &Summary{
+		Total:         roundFloat(creditAmount+debitAmount, 2),
+		AverageCredit: roundFloat(creditAmount/float64(creditCount), 2),
+		AverageDebit:  roundFloat(debitAmount/float64(debitCount), 2),
+		Txs:           txsmonth,
+	}
+
+	tmp := template.Must(template.ParseFiles("templates/summary.html"))
+	var body bytes.Buffer
+	if err := tmp.Execute(&body, summary); err != nil {
+		return err
+	}
+
+	// TODO: SEND to AWS SES and SQS
+	msg := mail.NewEmail(os.Getenv("KEY"))
+	if err := msg.Send("email@domain", "dev@braulio.tech", "Summary", body.String()); err != nil {
+		fmt.Printf("Email sending error: %s \n", err.Error())
+	}
+
+	return nil
+}
+
+func roundFloat(val float64, precision uint) float64 {
+	ratio := math.Pow(10, float64(precision))
+	return math.Round(val*ratio) / ratio
 }

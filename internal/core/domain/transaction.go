@@ -24,4 +24,9 @@ type TransactionDTO struct {
 	DebitAmount   float64      `json:"debit_amount"`
 	CreditAmount  float64      `json:"credit_amount"`
 	CreatedAt     sqltime.Time `json:"created_at"`
+
+	// Virtual columns
+	DebitCount  int    `json:"debit_count,omitempty"`
+	CreditCount int    `json:"credit_count,omitempty"`
+	Month       string `json:"month,omitempty"`
 }

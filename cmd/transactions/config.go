@@ -19,6 +19,11 @@ func config() (*api.Stori, error) {
 		return nil, err
 	}
 
+	// db, err := database.ConnectInit("postgres://165.227.68.59:5432/stori?sslmode=disable", "postgres", "postgres", 3)
+	// if err != nil {
+	// 	return nil, err
+	// }
+
 	// AWS settings
 	ses, err := aws.New(aws.Config{
 		Region: "us-west-2",

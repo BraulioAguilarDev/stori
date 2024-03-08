@@ -4,6 +4,7 @@ import "stori/internal/core/domain"
 
 type TransactionRepositoryPort interface {
 	Create(dto []domain.TransactionDTO) error
+	TransactionsByMonth(uuid string) ([]*domain.TransactionDTO, error)
 }
 
 type ProfileRepositoryPort interface {
