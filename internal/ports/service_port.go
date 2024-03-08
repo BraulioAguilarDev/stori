@@ -19,4 +19,5 @@ type AccountServicePort interface {
 type AccountS3ServicePort interface {
 	Create(dto *domain.AccountS3DTO) (*domain.AccountS3DTO, error)
 	GetFileByAccountID(uuid string) (string, error)
+	Find(accountId string) ([]*domain.AccountS3DTO, error)
 }

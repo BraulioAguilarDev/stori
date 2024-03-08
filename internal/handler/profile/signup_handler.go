@@ -16,14 +16,11 @@ type ProfileHdlr struct {
 
 // register params
 type Parameters struct {
-	// Previously registered at firebase
-	Firebase string `json:"firebase" validate:"required"`
 	// Full name
 	Name string `json:"name" validate:"required"`
 
 	// For authentication process
-	Email    string `json:"email" validate:"required,email"`
-	Password string `json:"password" validate:"required"`
+	Email string `json:"email" validate:"required,email"`
 }
 
 func ProvideProfileHandler(srv ports.ProfileServicePort) *ProfileHdlr {
@@ -46,9 +43,8 @@ func (hdl *ProfileHdlr) SignUpHandler(ctx *gin.Context) {
 	}
 
 	request := domain.ProfileDTO{
-		Name:     input.Name,
-		Email:    input.Email,
-		Firebase: input.Firebase,
+		Name:  input.Name,
+		Email: input.Email,
 	}
 
 	profile, err := hdl.service.Create(&request)

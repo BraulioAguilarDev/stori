@@ -11,7 +11,8 @@ func (s *AccountS3) TableName() string {
 }
 
 type AccountS3DTO struct {
-	AccountID string `json:"account_id"`
-	URL       string `json:"url"`
-	Filename  string `json:"filename"`
+	AccountID   string `json:"account_id"`
+	AccountName string `json:"account_name"`
+	URL         string `json:"url"`
+	Filename    string `json:"filename"`
 }

@@ -7,7 +7,7 @@ type Account struct {
 	Owner     string    `gorm:"not null"`
 	Bank      string    `gorm:"not null"`
 	Type      string    `gorm:"not null"`
-	Number    int       `gorm:"not null"`
+	Number    string    `gorm:"not null"`
 	ProfileID string    `gorm:"not null"`
 	CreatedAt time.Time `gorm:"autoCreateTime"`
 }
@@ -21,7 +21,7 @@ type AccountDTO struct {
 	Owner     string    `json:"owner"`
 	Bank      string    `json:"bank"`
 	Type      string    `json:"type"`
-	Number    int       `json:"number"`
+	Number    string    `json:"number"`
 	ProfileID string    `json:"profile_id"`
 	CreatedAt time.Time `json:"created_at"`
 }

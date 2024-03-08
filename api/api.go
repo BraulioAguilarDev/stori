@@ -55,7 +55,8 @@ func (api *Stori) SetupRouter() {
 	api.Router.POST("/signup", api.ProfileHandler.SignUpHandler)
 	api.Router.POST("/accounts", api.AccountHandler.CreateHandler)
 	api.Router.POST("/upload", api.AccountS3Handler.UploadToS3AndSaveHandler)
-	api.Router.POST("/transactions", api.TransactionHandler.ExecuteProcessHdlr)
+	api.Router.GET("/transaction/:account", api.TransactionHandler.ExecuteProcessHdlr)
+	api.Router.GET("/files/:account", api.AccountS3Handler.FindHandler)
 }
 
 func (api *Stori) Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {

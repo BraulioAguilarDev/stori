@@ -42,3 +42,22 @@ func (repo *accountS3Repository) GetFileByAccountID(uuid string) (string, error)
 
 	return accountS3.Filename, nil
 }
+
+func (repo *accountS3Repository) Find(uuid string) ([]*domain.AccountS3DTO, error) {
+	var txns []*domain.AccountS3DTO
+	if err := repo.db.Raw(`
+		SELECT
+			a.owner as account_name,
+			a.id as account_id,
+			as2.url as url,
+			as2.filename as filename
+		FROM
+			account_s3 as2
+		inner join account a on
+		as2.account_id = a.id
+		WHERE a.id = ?`, uuid).Scan(&txns).Error; err != nil {
+		return nil, err
+	}
+
+	return txns, nil
+}

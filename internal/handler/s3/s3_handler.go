@@ -38,6 +38,17 @@ type Parameters struct {
 	File      *multipart.FileHeader `form:"file"`
 }
 
+func (hdl *S3Hdlr) FindHandler(ctx *gin.Context) {
+	accountId := ctx.Params.ByName("account")
+
+	list, err := hdl.AccountS3Srv.Find(accountId)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusNotFound, response.Failure(err.Error()))
+	}
+
+	ctx.JSON(http.StatusOK, response.Success(list))
+}
+
 func (hdl *S3Hdlr) UploadToS3AndSaveHandler(ctx *gin.Context) {
 	var input Parameters
 	if err := ctx.Bind(&input); err != nil {

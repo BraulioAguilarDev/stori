@@ -41,10 +41,8 @@ type Parameters struct {
 }
 
 func (hdl *TransactionHdlr) ExecuteProcessHdlr(ctx *gin.Context) {
-	var input Parameters
-	if err := ctx.BindJSON(&input); err != nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, response.Failure(err.Error()))
-		return
+	input := Parameters{
+		AccountID: ctx.Params.ByName("account"),
 	}
 
 	errs := validator.ValidateStructure(input)

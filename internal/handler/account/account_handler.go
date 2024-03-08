@@ -22,7 +22,7 @@ type Parameters struct {
 	Owner  string `json:"owner" validate:"required"`
 	Bank   string `json:"bank" validate:"required"`
 	Type   string `json:"type" validate:"required"`
-	Number int    `json:"number" validate:"required"`
+	Number string `json:"number" validate:"required"`
 	User   string `json:"user_id" validate:"required"`
 }
 

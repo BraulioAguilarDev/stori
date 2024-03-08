@@ -22,3 +22,7 @@ func (srv *accountS3Service) Create(dto *domain.AccountS3DTO) (*domain.AccountS3
 func (srv *accountS3Service) GetFileByAccountID(uuid string) (string, error) {
 	return srv.repo.GetFileByAccountID(uuid)
 }
+
+func (srv *accountS3Service) Find(accountID string) ([]*domain.AccountS3DTO, error) {
+	return srv.repo.Find(accountID)
+}

@@ -1,11 +1,10 @@
 CREATE TABLE IF NOT EXISTS "profile" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
-  "firebase" VARCHAR(28) NOT NULL,
   "name" VARCHAR(100) NOT NULL,
   "email" VARCHAR(100) NOT NULL,
   "created_at" TIMESTAMP NOT NULL DEFAULT NOW(),
   PRIMARY KEY(id),
-  UNIQUE(email, firebase)
+  UNIQUE(name, email)
 );
 
 CREATE TABLE IF NOT EXISTS "account" (
