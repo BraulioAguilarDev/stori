@@ -15,7 +15,7 @@ import (
 )
 
 func config() (*api.Stori, error) {
-	db, err := database.ConnectInit("postgres://db.stori.com:5432/stori?sslmode=disable", "postgres", "postgres", 3)
+	db, err := database.ConnectInit(os.Getenv("DSN"), os.Getenv("USER"), os.Getenv("PASS"), 3)
 	if err != nil {
 		return nil, err
 	}

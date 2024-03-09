@@ -3,17 +3,17 @@ version: "3.8"
 x-common-variables: &common-variables
   POSTGRES_DB: stori
   POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: postgres
+  POSTGRES_PASSWORD: p6KbD513wVo6
   POSTGRES_PORT: 5432
 
 services:
   postgres:
-    image: postgres:14.3-alpine
+    image: postgres:latest
     container_name: db.stori.com
     ports:
       - "5432:5432"
     expose:
-      - "54320"
+      - "5432"
     environment: *common-variables
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres -d stori" ]
