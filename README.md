@@ -1,1 +1,2 @@
-# Stori Lambda
+# Stori
+
