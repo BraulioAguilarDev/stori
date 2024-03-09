@@ -3,7 +3,7 @@
 # Endpoints
 
 * `/signup` register a new user
-* `/accounts` adds new accunt bank info
+* `/accounts` adds new account bank info
 * `/upload` upload cvs file to S3
 * `/transaction/:account` process csv file form s3
 
