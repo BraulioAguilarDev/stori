@@ -17,6 +17,7 @@ ARG NAME=stori
 WORKDIR /go/src/app
 
 COPY --from=builder /$NAME .
+COPY --from=builder /go/src/templates /go/src/templates
 
 EXPOSE 8080
 
