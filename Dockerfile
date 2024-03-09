@@ -6,6 +6,8 @@ WORKDIR /go/src/app
 
 ADD . /go/src/app/
 
+COPY ./templates/summary.html /usr/share/summary.html
+
 RUN go mod download && go mod verify
 
 RUN go build -v -o /stori ./cmd/transactions/*.go
