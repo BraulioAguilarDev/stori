@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"stori/api"
 	"stori/internal/core/service"
 	accounthdlr "stori/internal/handler/account"
@@ -22,8 +23,8 @@ func config() (*api.Stori, error) {
 	// AWS settings
 	ses, err := aws.New(aws.Config{
 		Region: "us-west-2",
-		ID:     "AKIA3FLDYOQ4QT4SYBGS",
-		Secret: "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",
+		ID:     os.Getenv("AWS_ID"),
+		Secret: os.Getenv("AWS_SECRET"),
 	})
 	if err != nil {
 		return nil, err
