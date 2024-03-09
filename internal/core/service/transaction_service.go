@@ -35,7 +35,7 @@ type Summary struct {
 	AverageDebit, AverageCredit float64
 }
 
-func (srv *transactionService) Create(accountID string, rows [][]string) error {
+func (srv *transactionService) Create(accountID, email string, rows [][]string) error {
 	type Item struct {
 		Date   sqltime.Time
 		Debit  float64
@@ -116,7 +116,7 @@ func (srv *transactionService) Create(accountID string, rows [][]string) error {
 
 	// TODO: SEND to AWS SES and SQS
 	msg := mail.NewEmail(os.Getenv("KEYSG"))
-	if err := msg.Send("email@domain", os.Getenv("SENDER"), "Summary", body.String()); err != nil {
+	if err := msg.Send(email, os.Getenv("SENDER"), "Summary", body.String()); err != nil {
 		fmt.Printf("Email sending error: %s \n", err.Error())
 	}
 

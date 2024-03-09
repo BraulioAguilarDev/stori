@@ -41,6 +41,16 @@ func (repo *accountRepository) GetByID(uuid string) (*domain.AccountDTO, error) 
 	return repo.fromEntity(account), nil
 }
 
+func (repo *accountRepository) GetEmail(uuid string) string {
+	var email string
+	query := `select p.email as email from profile p inner join account a on a.profile_id = p.id where a.id = ?`
+	if err := repo.db.Raw(query, uuid).Scan(&email).Error; err != nil {
+		return ""
+	}
+
+	return email
+}
+
 // Mapping domain struct to DTO
 func (repo *accountRepository) fromEntity(account domain.Account) *domain.AccountDTO {
 	return &domain.AccountDTO{

@@ -15,6 +15,7 @@ type ProfileRepositoryPort interface {
 type AccountRepositoryPort interface {
 	Create(dto *domain.AccountDTO) (*domain.AccountDTO, error)
 	GetByID(uuid string) (*domain.AccountDTO, error)
+	GetEmail(accountId string) string
 }
 
 type AccountS3RepositoryPort interface {

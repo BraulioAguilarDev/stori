@@ -22,3 +22,7 @@ func (srv *accountService) Create(dto *domain.AccountDTO) (*domain.AccountDTO, e
 func (srv *accountService) GetByID(uuid string) (*domain.AccountDTO, error) {
 	return srv.repo.GetByID(uuid)
 }
+
+func (srv *accountService) GetEmail(email string) string {
+	return srv.repo.GetEmail(email)
+}

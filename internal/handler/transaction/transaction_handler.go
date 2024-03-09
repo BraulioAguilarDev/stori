@@ -2,7 +2,6 @@ package transactionhdlr
 
 import (
 	"encoding/csv"
-	"errors"
 	"net/http"
 	"stori/internal/ports"
 	"stori/pkg/cloud"
@@ -52,14 +51,9 @@ func (hdl *TransactionHdlr) ExecuteProcessHdlr(ctx *gin.Context) {
 	}
 
 	// Getting account info
-	account, err := hdl.AccountSrv.GetByID(input.AccountID)
-	if err != nil {
+	email := hdl.AccountSrv.GetEmail(input.AccountID)
+	if len(email) == 0 {
 		ctx.AbortWithStatus(http.StatusNotFound)
-		return
-	}
-
-	if account == nil {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, errors.New("getting account error"))
 		return
 	}
 
@@ -84,7 +78,7 @@ func (hdl *TransactionHdlr) ExecuteProcessHdlr(ctx *gin.Context) {
 	}
 
 	// Sending to service
-	if err := hdl.TransactionSrv.Create(account.ID, records); err != nil {
+	if err := hdl.TransactionSrv.Create(input.AccountID, email, records); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, response.Failure(err.Error()))
 		return
 	}
