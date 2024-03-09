@@ -22,5 +22,4 @@ func main() {
 
 	api.SetupRouter()
 	api.Router.Run(":8080")
-	// lambda.Start(api.Handler)
 }

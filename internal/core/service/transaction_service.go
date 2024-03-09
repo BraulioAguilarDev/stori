@@ -115,8 +115,8 @@ func (srv *transactionService) Create(accountID string, rows [][]string) error {
 	}
 
 	// TODO: SEND to AWS SES and SQS
-	msg := mail.NewEmail(os.Getenv("KEY"))
-	if err := msg.Send("email@domain", "dev@braulio.tech", "Summary", body.String()); err != nil {
+	msg := mail.NewEmail(os.Getenv("KEYSG"))
+	if err := msg.Send("email@domain", os.Getenv("SENDER"), "Summary", body.String()); err != nil {
 		fmt.Printf("Email sending error: %s \n", err.Error())
 	}
 
