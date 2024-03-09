@@ -6,6 +6,8 @@ WORKDIR /go/src/app
 
 ADD . /go/src/app/
 
+COPY ./templates/summary.html /usr/share/summary.html
+
 RUN go mod download && go mod verify
 
 RUN go build -v -o /stori ./cmd/transactions/*.go
@@ -17,7 +19,6 @@ ARG NAME=stori
 WORKDIR /go/src/app
 
 COPY --from=builder /$NAME .
-COPY --from=builder /go/src/templates /go/src/templates
 
 EXPOSE 8080
 

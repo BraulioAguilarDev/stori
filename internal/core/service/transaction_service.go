@@ -108,7 +108,7 @@ func (srv *transactionService) Create(accountID string, rows [][]string) error {
 		Txs:           txsmonth,
 	}
 
-	tmp := template.Must(template.ParseFiles("templates/summary.html"))
+	tmp := template.Must(template.ParseFiles("/usr/share/summary.html"))
 	var body bytes.Buffer
 	if err := tmp.Execute(&body, summary); err != nil {
 		return err
